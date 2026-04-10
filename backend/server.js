@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
+const fs = require('fs');
 
 dotenv.config();
 
@@ -17,10 +18,17 @@ mongoose.connect(process.env.MONGO_URI)
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/polls', require('./routes/polls'));
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../frontend/build')));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+const buildPath = path.join(__dirname, '../frontend/build');
+if (fs.existsSync(buildPath)) {
+  console.log('Serving frontend build from:', buildPath);
+  app.use(express.static(buildPath));
+  app.use((req, res) => {
+    res.sendFile(path.join(buildPath, 'index.html'));
+  });
+} else {
+  console.log('Frontend build not found at:', buildPath);
+  app.get('/', (req, res) => {
+    res.send('Backend is running. Frontend build not found.');
   });
 }
 
