@@ -13,7 +13,7 @@ app.use(express.json());
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log(err));
+  .catch(err => console.log('MongoDB error:', err.message));
 
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/polls', require('./routes/polls'));
