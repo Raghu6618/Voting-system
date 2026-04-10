@@ -1,6 +1,5 @@
-import { useState, useEffect, useContext } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../utils/api';
 
 const AdminDashboard = () => {
@@ -8,8 +7,6 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [stats, setStats] = useState({ total: 0, totalVotes: 0, mostPopular: null });
-  const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     loadPolls();

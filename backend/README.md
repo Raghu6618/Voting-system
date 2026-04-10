@@ -113,31 +113,50 @@ After seeding the database, you can use these credentials:
 
 ## Deployment
 
-### Backend Deployment
-1. Set environment variables on your hosting platform (Heroku, Railway, etc.):
-   - `PORT` (provided by platform)
-   - `MONGO_URI` (your MongoDB Atlas connection string)
-   - `JWT_SECRET` (secure random string)
-   - `NODE_ENV=production`
+### Single Service Deployment (Recommended for Render)
 
-2. Deploy the backend code to your chosen platform.
-
-### Frontend Deployment
-1. Update `frontend/.env` for production:
-   ```
-   REACT_APP_API_BASE_URL=https://your-backend-url.com/api
-   REACT_APP_ENV=production
-   ```
-
-2. Build the frontend:
+1. **Build the frontend** before deploying:
    ```bash
    cd frontend
    npm run build
    ```
 
-3. Deploy the `build/` folder to a static hosting service (Netlify, Vercel, etc.).
+2. **Deploy the backend service** on Render with these settings:
+   - **Service Type**: Web Service
+   - **Build Command**: `npm install && cd ../frontend && npm install && npm run build`
+   - **Start Command**: `npm start`
+   - **Root Directory**: `backend`
+   - **Environment Variables**:
+     ```
+     MONGO_URI=your_mongodb_atlas_connection_string
+     JWT_SECRET=your_secure_jwt_secret
+     NODE_ENV=production
+     ```
+
+3. **Frontend Environment**: The backend will automatically serve the built React app.
+
+### Alternative: Separate Services
+
+If deploying frontend and backend separately:
+
+1. **Backend Service**:
+   - Same settings as above, but remove the build command for frontend
+
+2. **Frontend Service**:
+   - **Service Type**: Static Site
+   - **Build Command**: `npm run build`
+   - **Publish Directory**: `build`
+   - **Environment Variables**:
+     ```
+     REACT_APP_API_BASE_URL=https://your-backend-service.onrender.com/api
+     ```
 
 ### Environment Variables Summary
-- **Backend .env**: Database connection, JWT secret, port
-- **Frontend .env**: API base URL, environment flag
-- **Production**: Set environment variables in your hosting platform's dashboard
+
+**Backend** (set in Render service environment):
+- `MONGO_URI`: MongoDB Atlas connection string
+- `JWT_SECRET`: Secure random string for JWT signing
+- `NODE_ENV`: Set to `production`
+
+**Frontend** (only needed for separate deployment):
+- `REACT_APP_API_BASE_URL`: Full URL to deployed backend API
