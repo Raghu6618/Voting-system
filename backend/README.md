@@ -154,9 +154,13 @@ If deploying frontend and backend separately:
 ### Environment Variables Summary
 
 **Backend** (set in Render service environment):
-- `MONGO_URI`: MongoDB Atlas connection string
+- `MONGO_URI`: MongoDB Atlas connection string (for production)
 - `JWT_SECRET`: Secure random string for JWT signing
 - `NODE_ENV`: Set to `production`
 
 **Frontend** (only needed for separate deployment):
 - `REACT_APP_API_BASE_URL`: Full URL to deployed backend API
+
+**Local Development**:
+- Use `MONGO_URI=mongodb://localhost:27017/votingapp` for local MongoDB
+- Use `REACT_APP_API_BASE_URL=http://localhost:5000/api` for local development
